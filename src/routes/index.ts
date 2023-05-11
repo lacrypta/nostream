@@ -1,5 +1,7 @@
 import express from 'express'
 
+import { Router, json } from 'express'
+
 import callbacksRouter from './callbacks'
 import { getHealthRequestHandler } from '../handlers/request-handlers/get-health-request-handler'
 import { getTermsRequestHandler } from '../handlers/request-handlers/get-terms-request-handler'
@@ -15,5 +17,13 @@ router.get('/terms', getTermsRequestHandler)
 
 router.use('/invoices', rateLimiterMiddleware, invoiceRouter)
 router.use('/callbacks', rateLimiterMiddleware, callbacksRouter)
+
+const pluginRouter = Router();
+pluginRouter.get('/', json(), (req, res) => {
+  res.status(200).send("hello");
+  return;
+});
+
+router.use('/plugin', rateLimiterMiddleware, pluginRouter);
 
 export default router
